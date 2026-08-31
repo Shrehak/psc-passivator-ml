@@ -1,0 +1,13 @@
+pandas
+numpy
+scikit-learn
+ngboost
+bayesian-optimization
+xgboost
+shap
+rdkit
+joblib
+openpyxl
+matplotlib
+seaborn
+scipy
