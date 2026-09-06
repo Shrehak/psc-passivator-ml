@@ -36,8 +36,7 @@ spending lab time synthesizing and testing them.
 ### Headline (Leave-One-Out Cross-Validation)
 With only 212 molecules, a single train/test split proved unreliable (R2 varied
 0.39-0.55 across different random splits). Switched to LOOCV -- train on 211
-molecules, test on the 1 left out, repeat for every molecule -- as the most
-rigorous validation choice for a dataset this small.
+molecules, test on the 1 left out, repeat for every molecule -- as a data-efficient evaluation approach: the model trains on 211 molecules and tests on the remaining molecule, repeating this process for all 212 molecules.
 
 - **LOOCV R2: 0.492**
 - **LOOCV MAE: 0.288 eV**
