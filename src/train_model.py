@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import StandardScaler
@@ -141,53 +142,3 @@ def compare_models_loocv(X, y, models_to_compare):
 
     return results
 
-from sklearn.model_selection import LeaveOneOut
-from sklearn.metrics import r2_score
-
-
-def run_loocv(X, y, params):
-    """Evaluate a model using Leave-One-Out Cross-Validation.
-
-    More rigorous than k-fold for small datasets (~200 samples) since every
-    single sample gets used as the held-out test case exactly once.
-    Returns (r2, mae, out_of_fold_predictions).
-    """
-    loo = LeaveOneOut()
-    Xarr, yarr = X.values, y.values
-    preds = np.zeros_like(yarr, dtype=float)
-
-    for tr_idx, te_idx in loo.split(Xarr):
-        scaler = StandardScaler()
-        Xtr = scaler.fit_transform(Xarr[tr_idx])
-        Xte = scaler.transform(Xarr[te_idx])
-        model = build_model(**params)
-        model.fit(Xtr, yarr[tr_idx])
-        preds[te_idx] = model.predict(Xte)
-
-    r2 = r2_score(yarr, preds)
-    mae = mean_absolute_error(yarr, preds)
-    return r2, mae, preds
-
-
-def compare_models_loocv(X, y, models_to_compare):
-    """Run LOOCV for multiple model types, return a results dict.
-
-    models_to_compare: dict of {name: builder_function}, where builder_function
-    takes no args and returns a fresh, unfitted sklearn-style model.
-    """
-    loo = LeaveOneOut()
-    Xarr, yarr = X.values, y.values
-    results = {}
-
-    for name, builder in models_to_compare.items():
-        preds = np.zeros_like(yarr, dtype=float)
-        for tr_idx, te_idx in loo.split(Xarr):
-            scaler = StandardScaler()
-            Xtr = scaler.fit_transform(Xarr[tr_idx])
-            Xte = scaler.transform(Xarr[te_idx])
-            m = builder()
-            m.fit(Xtr, yarr[tr_idx])
-            preds[te_idx] = m.predict(Xte)
-        results[name] = (r2_score(yarr, preds), mean_absolute_error(yarr, preds))
-
-    return results

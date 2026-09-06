@@ -42,7 +42,8 @@ rigorous validation choice for a dataset this small.
 - **LOOCV R2: 0.492**
 - **LOOCV MAE: 0.288 eV**
 - Dataset: 212 molecules from the paper's public data
-- Features: 63 RDKit descriptors (from an original 130, after dropping
+- Features: 63 molecular descriptors, including quantum-chemical features
+  (HOMO, LUMO, Dipole_Moment are not RDKit descriptors) (from an original 130, after dropping
   constant, redundant, and target-uncorrelated columns). Note: feature
   selection was done once on the full dataset before cross-validation, which
   can introduce mild optimism into the reported score -- a stricter version
